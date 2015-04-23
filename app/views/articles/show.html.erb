@@ -1,4 +1,5 @@
-<p id="notice"><%= notice %></p>
+  <h2>Written by</h2>
+  <%= @article.user.email %>
 
 <p>
   <strong>Content:</strong>
@@ -10,10 +11,7 @@
   <%= @article.heading %>
 </p>
 
-<p>
-  <strong>User:</strong>
-  <%= @article.user_id %>
-</p>
-
-<%= link_to 'Edit', edit_article_path(@article) %> |
+<% if current_user and current_user == @article.user %>
+  <%= link_to 'Edit', edit_article_path(@article) %> |
+<% end %>
 <%= link_to 'Back', articles_path %>
