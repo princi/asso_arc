@@ -1,5 +1,9 @@
 class ArticlesController < ApplicationController
+
   before_action :set_article, only: [:show, :edit, :update, :destroy]
+  #Check devise readme for authenticate_user! filter.
+  before_action :authenticate_user!, only: [:new, :edit, :create, :update, :destroy]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
 
   # GET /articles
   # GET /articles.json
@@ -14,7 +18,7 @@ class ArticlesController < ApplicationController
 
   # GET /articles/new
   def new
-    @article = Article.new
+    @article = current_user.articles.new
   end
 
   # GET /articles/1/edit
@@ -24,7 +28,7 @@ class ArticlesController < ApplicationController
   # POST /articles
   # POST /articles.json
   def create
-    @article = Article.new(article_params)
+    @article = current_user.articles.new(article_params)
 
     respond_to do |format|
       if @article.save
@@ -70,5 +74,9 @@ class ArticlesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def article_params
       params.require(:article).permit(:content, :heading, :user_id)
+    end
+
+    def authorize_user
+      redirect_to root_path unless @article.user == current_user
     end
 end
